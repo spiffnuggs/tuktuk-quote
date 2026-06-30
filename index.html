@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TukTuk Tournament — Fixes &amp; Upgrades</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --yellow: #FFE500; --orange: #FF6B00; --teal: #00C8A0; --blue: #0066FF; --red: #FF4757;
+            --black: #000000; --gray-950: #0a0a0a; --gray-900: #111111; --gray-800: #1f2937;
+            --gray-700: #374151; --gray-600: #4b5563; --gray-500: #6b7280; --gray-400: #9ca3af;
+            --gray-300: #d1d5db; --white: #ffffff;
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--black); color: var(--white); line-height: 1.6;
+            -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+            padding-bottom: 78px; overflow-x: hidden;
+        }
+        h1, h2, h3 { font-family: 'Bebas Neue', 'Arial Black', sans-serif; letter-spacing: 0.03em; text-transform: uppercase; }
+
+        /* HERO */
+        .hero {
+            background: radial-gradient(circle at 28% 18%, rgba(255,107,0,0.28), transparent 50%),
+                radial-gradient(circle at 82% 68%, rgba(255,229,0,0.16), transparent 46%), var(--black);
+            color: white; padding: 120px 40px 100px; text-align: center; position: relative; overflow: hidden;
+            min-height: 72vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 60%, var(--black) 100%); pointer-events: none; }
+        .hero-content { position: relative; z-index: 1; max-width: 680px; }
+        .hero-label { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--yellow); margin-bottom: 32px; display: inline-block; padding: 6px 16px; border: 1px solid rgba(255,229,0,0.25); border-radius: 20px; background: rgba(255,229,0,0.06); }
+        .hero-intro { font-size: 14px; font-weight: 400; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 12px; }
+        .hero h1 { font-size: clamp(48px, 7vw, 82px); line-height: 0.95; margin-bottom: 24px; color: var(--white); text-shadow: 0 2px 20px rgba(0,0,0,0.4); }
+        .hero h1 span { background: linear-gradient(135deg, var(--yellow), var(--orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero-rule { width: 60px; height: 3px; margin: 0 auto 24px; background: linear-gradient(90deg, var(--yellow), var(--orange)); border-radius: 2px; }
+        .hero-sub { font-size: 16px; font-weight: 400; color: rgba(255,255,255,0.85); max-width: 500px; margin: 0 auto; line-height: 1.7; }
+        .hero-meta { margin-top: 44px; display: flex; justify-content: center; gap: 20px; font-size: 12px; color: rgba(255,255,255,0.35); letter-spacing: 1px; text-transform: uppercase; }
+        .hero-meta .meta-dot { width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,0.18); align-self: center; }
+
+        .container { max-width: 840px; margin: 0 auto; padding: 0 32px; }
+        section { padding: 60px 0; }
+        .section-label { font-size: 12px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--yellow); margin-bottom: 14px; text-align: center; }
+        h2 { font-size: clamp(30px, 5vw, 46px); line-height: 1.05; margin-bottom: 14px; color: var(--white); text-align: center; }
+        .section-subtitle { color: var(--gray-400); font-size: 15px; text-align: center; max-width: 540px; margin: 0 auto 36px; line-height: 1.7; }
+        .bg-gray { background: var(--gray-950); }
+
+        /* HOW TO READ */
+        .read-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; max-width: 740px; margin: 0 auto 20px; }
+        .read-card { background: var(--gray-900); border: 1px solid var(--gray-800); border-radius: 14px; padding: 22px 18px; text-align: center; }
+        .read-card .rc-num { font-family: 'Bebas Neue'; font-size: 26px; color: var(--yellow); line-height: 1; }
+        .read-card h4 { font-size: 13px; font-weight: 700; color: var(--white); margin: 8px 0 4px; }
+        .read-card p { font-size: 12px; color: var(--gray-500); line-height: 1.5; margin: 0; }
+        .draft-note { max-width: 740px; margin: 0 auto; text-align: center; font-size: 12px; color: var(--gray-400); background: rgba(255,229,0,0.05); border: 1px dashed rgba(255,229,0,0.2); border-radius: 10px; padding: 13px 18px; line-height: 1.6; }
+        .draft-note strong { color: var(--yellow); }
+
+        /* LINE ITEMS */
+        .items { max-width: 780px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+        .item { background: var(--gray-950); border: 1px solid var(--gray-800); border-radius: 14px; padding: 18px 20px; display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: start; cursor: pointer; transition: opacity 0.2s, border-color 0.2s; }
+        .item:hover { border-color: var(--gray-700); }
+        .item.off { opacity: 0.4; }
+        .item-check { display: flex; align-items: flex-start; padding-top: 2px; }
+        .item-check input { width: 22px; height: 22px; accent-color: var(--yellow); cursor: pointer; }
+        .item-check .static-check { width: 22px; height: 22px; border-radius: 6px; background: rgba(0,200,160,0.12); color: var(--teal); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; }
+        .item-main h4 { font-family: 'Inter'; font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 6px; display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+        .item-main p { font-size: 13px; color: var(--gray-400); line-height: 1.6; margin: 0; }
+        .item-tag { font-family: 'Inter'; font-size: 9px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; }
+        .tag-content { background: rgba(0,200,160,0.1); color: var(--teal); }
+        .tag-fix { background: rgba(255,71,87,0.12); color: var(--red); }
+        .tag-feature { background: rgba(0,102,255,0.14); color: #4d94ff; }
+        .tag-explain { background: rgba(255,229,0,0.1); color: var(--yellow); }
+        .tag-done { background: rgba(0,200,160,0.1); color: var(--teal); }
+        .tag-optional { background: rgba(168,120,255,0.14); color: #b388ff; }
+        .tag-addon { background: rgba(255,107,0,0.14); color: #ff9a4d; }
+        .item-price { font-family: 'Inter'; font-size: 20px; font-weight: 800; color: var(--yellow); white-space: nowrap; text-align: right; padding-top: 2px; }
+        .item-price small { display: block; font-size: 11px; font-weight: 500; color: var(--gray-500); }
+        .item-price.free { color: var(--teal); font-size: 15px; }
+        .item-q { margin-top: 11px; padding: 10px 13px; border-radius: 8px; background: rgba(0,102,255,0.07); border: 1px solid rgba(0,102,255,0.2); font-size: 12px; color: #9db8e8; line-height: 1.55; }
+        .item-q strong { color: #cfe0ff; font-weight: 700; }
+        .item-q.action { background: rgba(255,107,0,0.07); border-color: rgba(255,107,0,0.22); color: #f0b890; }
+        .item-q.action strong { color: #ffd0a8; }
+        .req-note { font-size: 11px; color: var(--gray-500); margin-top: 8px; font-style: italic; }
+
+        .subtotal { display: flex; justify-content: flex-end; align-items: baseline; gap: 12px; max-width: 780px; margin: 16px auto 0; padding-right: 6px; }
+        .subtotal .lbl { font-size: 11px; color: var(--gray-500); text-transform: uppercase; letter-spacing: 1.5px; }
+        .subtotal .val { font-family: 'Inter'; font-size: 18px; font-weight: 800; color: var(--white); }
+        .divider { max-width: 200px; margin: 0 auto; height: 1px; background: var(--gray-800); }
+
+        /* SUMMARY */
+        .summary { max-width: 600px; margin: 0 auto; background: var(--gray-900); border: 1px solid var(--gray-800); border-radius: 18px; padding: 34px; position: relative; overflow: hidden; }
+        .summary::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--yellow), var(--orange)); }
+        .summary-row { display: flex; justify-content: space-between; align-items: baseline; padding: 12px 0; border-bottom: 1px solid var(--gray-800); }
+        .summary-row .s-name { font-size: 14px; color: var(--gray-300); }
+        .summary-row .s-val { font-family: 'Inter'; font-weight: 800; color: var(--white); }
+        .summary-total { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--gray-700); display: flex; justify-content: space-between; align-items: baseline; }
+        .summary-total .s-name { font-size: 15px; font-weight: 700; color: var(--gray-300); }
+        .summary-total .s-val { font-family: 'Inter'; font-size: 20px; font-weight: 800; color: var(--white); }
+        .summary-foot { margin-top: 14px; font-size: 12px; color: var(--gray-500); line-height: 1.6; text-align: center; }
+        .summary-foot strong { color: var(--gray-300); }
+        .sel-box { margin-top: 22px; padding: 22px; border-radius: 14px; background: rgba(255,229,0,0.06); border: 1.5px solid rgba(255,229,0,0.3); display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+        .sel-box .sel-name { font-size: 13px; font-weight: 700; color: var(--yellow); text-transform: uppercase; letter-spacing: 1px; }
+        .sel-box .sel-sub { font-size: 12px; color: var(--gray-400); margin-top: 3px; }
+        .sel-box .sel-val { font-family: 'Bebas Neue'; font-size: 40px; color: var(--yellow); letter-spacing: 0.02em; line-height: 1; }
+
+        /* STICKY TALLY BAR */
+        .tally-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 60; background: rgba(10,10,10,0.97); backdrop-filter: blur(10px); border-top: 1px solid var(--gray-800); display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 24px; }
+        .tally-bar .tb-left { display: flex; flex-direction: column; }
+        .tally-bar .tb-label { font-size: 10px; color: var(--gray-400); text-transform: uppercase; letter-spacing: 1.5px; }
+        .tally-bar .tb-total { font-family: 'Bebas Neue'; font-size: 30px; color: var(--yellow); letter-spacing: 0.02em; line-height: 1; }
+        .tally-bar .tb-send { background: linear-gradient(135deg, var(--yellow), var(--orange)); color: #000; border: none; padding: 13px 26px; border-radius: 8px; font-family: 'Inter'; font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; transition: transform 0.2s; }
+        .tally-bar .tb-send:hover { transform: scale(1.03); }
+
+        .cta-section { text-align: center; padding: 70px 0 40px; }
+        .nothing-dropped { max-width: 560px; margin: 0 auto 24px; text-align: center; font-size: 13px; color: var(--gray-400); line-height: 1.7; }
+        .nothing-dropped strong { color: var(--teal); }
+        .signoff { text-align: center; padding: 24px 32px 16px; }
+        .signoff .names { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 0.05em; color: var(--yellow); }
+        footer { text-align: center; padding: 28px; font-size: 12px; color: var(--gray-600); border-top: 1px solid var(--gray-800); }
+        footer a { color: var(--gray-400); text-decoration: none; }
+        .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 720px) {
+            .hero { padding: 90px 22px 64px; min-height: 60vh; }
+            .hero-label { margin-bottom: 24px; }
+            .hero h1 { font-size: 44px; }
+            .hero-sub { font-size: 15px; }
+            .hero-meta { margin-top: 32px; flex-direction: column; gap: 6px; align-items: center; }
+            .hero-meta .meta-dot { display: none; }
+            .container { padding: 0 16px; }
+            section { padding: 44px 0; }
+            h2 { font-size: 30px; }
+            .section-subtitle { font-size: 14px; margin-bottom: 28px; }
+            .read-grid { grid-template-columns: 1fr; gap: 10px; }
+            .read-card { padding: 18px; }
+            .items { gap: 10px; }
+            .item { gap: 13px; padding: 15px 14px; }
+            .item-check input, .item-check .static-check { width: 24px; height: 24px; }
+            .item-main h4 { font-size: 14.5px; line-height: 1.3; }
+            .item-main p { font-size: 12.5px; }
+            .item-price { font-size: 17px; }
+            .item-price small { font-size: 10px; }
+            .item-q { font-size: 11.5px; padding: 9px 11px; }
+            .subtotal .val { font-size: 16px; }
+            .summary { padding: 22px 16px; }
+            .summary-row .s-name, .summary-total .s-name { font-size: 13px; }
+            .sel-box { padding: 18px; }
+            .sel-box .sel-val { font-size: 34px; }
+            .cta-section { padding: 50px 0 30px; }
+            .tally-bar { padding: 10px 14px; gap: 10px; }
+            .tally-bar .tb-label { font-size: 9px; }
+            .tally-bar .tb-total { font-size: 23px; }
+            .tally-bar .tb-send { padding: 12px 16px; font-size: 13px; border-radius: 9px; }
+            body { padding-bottom: 80px; }
+        }
+
+        @media (max-width: 400px) {
+            .hero { padding: 78px 16px 54px; }
+            .hero h1 { font-size: 38px; }
+            .hero-label { font-size: 10px; padding: 5px 13px; margin-bottom: 20px; }
+            .container { padding: 0 13px; }
+            section { padding: 38px 0; }
+            .item { padding: 14px 12px; gap: 11px; }
+            .item-main h4 { font-size: 14px; gap: 7px; }
+            .item-tag { font-size: 8px; padding: 2px 6px; }
+            .item-price { font-size: 16px; }
+            .sel-box { flex-direction: column; align-items: flex-start; gap: 8px; }
+            .sel-box .sel-val { font-size: 30px; }
+            .tally-bar { padding: 9px 12px; }
+            .tally-bar .tb-send { padding: 11px 14px; font-size: 12px; }
+            .tally-bar .tb-total { font-size: 21px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="hero">
+        <div class="hero-content">
+            <div class="hero-label">Scope &amp; Quote · Round 2</div>
+            <div class="hero-intro">Prepared for</div>
+            <h1><span>TukTuk Tournament</span></h1>
+            <div class="hero-rule"></div>
+            <p class="hero-sub">Everything you've asked for &mdash; grouped, explained, and priced line by line. Tick what you want; the total tallies live at the bottom and sends straight to me.</p>
+            <div class="hero-meta">
+                <span>Prepared for Ivan &amp; the TukTuk team</span>
+                <span class="meta-dot"></span>
+                <span>June 2026</span>
+            </div>
+        </div>
+    </header>
+
+    <section class="bg-gray fade-up">
+        <div class="container">
+            <div class="section-label">How To Read This</div>
+            <h2>Pick What You Want.</h2>
+            <p class="section-subtitle">You sent a lot &mdash; none of it got dropped. Here's how it works:</p>
+            <div class="read-grid">
+                <div class="read-card"><div class="rc-num">01</div><h4>Tick the boxes</h4><p>Check the items you want. Uncheck what you don't. Dimmed = not selected.</p></div>
+                <div class="read-card"><div class="rc-num">02</div><h4>Watch the total</h4><p>Your running total updates live in the bar pinned at the bottom of the screen.</p></div>
+                <div class="read-card"><div class="rc-num">03</div><h4>Send it to me</h4><p>Hit "Send to Spiff" and it emails me your exact picks &amp; total. Done.</p></div>
+            </div>
+            <p class="draft-note"><strong>These are draft figures.</strong> Some items auto-tick a thing they depend on (e.g. the chatbot needs the Brain). Questions I need answered are flagged in blue.</p>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- SECTION 1 -->
+    <section class="fade-up">
+        <div class="container">
+            <div class="section-label">Section 1</div>
+            <h2>Content &amp; Copy</h2>
+            <p class="section-subtitle">The quick, visible updates.</p>
+            <div class="items">
+                <div class="item">
+                    <span class="item-check"><span class="static-check">&#10003;</span></span>
+                    <div class="item-main">
+                        <h4>WhatsApp &amp; footer number <span class="item-tag tag-done">Done</span></h4>
+                        <p>Updated everywhere to <strong>+94 74 074 7030</strong> &mdash; both the displayed footer number <em>and</em> the click-to-chat links (tap a WhatsApp link &rarr; opens a chat straight to the new number with a ready-to-send message). Already live, no charge.</p>
+                    </div>
+                    <div class="item-price free">Free</div>
+                </div>
+                <div class="item">
+                    <span class="item-check"><span class="static-check">&#10003;</span></span>
+                    <div class="item-main">
+                        <h4>Adding India to the site <span class="item-tag tag-done">Done</span></h4>
+                        <p>Getting India live across the site, including the 2027 dates (<strong>Apr 18 &ndash; May 1</strong>) everywhere it appears &mdash; included, no charge.</p>
+                    </div>
+                    <div class="item-price free">Free</div>
+                </div>
+                <label class="item">
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="repairs" data-price="40" data-name="Repairs & breakdowns policy" checked></span>
+                    <div class="item-main">
+                        <h4>Repairs &amp; breakdowns policy <span class="item-tag tag-content">Content</span></h4>
+                        <p>Clear messaging that participants cover repairs and breakdowns of their tuktuks &mdash; added in 2 places: the India checkout and an FAQ page.</p>
+                    </div>
+                    <div class="item-price">$40</div>
+                </label>
+                <label class="item">
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="open2030" data-price="180" data-name="Open booking through 2030" checked></span>
+                    <div class="item-main">
+                        <h4>Open booking through 2030 <span class="item-tag tag-feature">Feature</span></h4>
+                        <p>Let events be created and booked for future years out to 2030 &mdash; <em>and</em> reformat the 10+ places menus and tournament lists appear (booking pop-up, homepage, nav, sticky bar, hero, and more) so the expanded set still looks clean everywhere. Significant layout work across the whole site, not just flipping a setting.</p>
+                    </div>
+                    <div class="item-price">$180</div>
+                </label>
+            </div>
+            <div class="subtotal"><span class="lbl">Section 1 full</span><span class="val">$220</span></div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- SECTION 2 -->
+    <section class="bg-gray fade-up">
+        <div class="container">
+            <div class="section-label">Section 2</div>
+            <h2>Booking &amp; Availability Engine</h2>
+            <p class="section-subtitle">One backend truth for availability &mdash; so every number agrees and sold-out frees up on its own.</p>
+            <div class="items">
+                <div class="item">
+                    <span class="item-check"><span class="static-check">&#10003;</span></span>
+                    <div class="item-main">
+                        <h4>Deposit-gated bookings &mdash; no more ghosts <span class="item-tag tag-done">Done</span></h4>
+                        <p>A booking only counts once the deposit is actually paid &mdash; half-finished checkouts and Zapier test runs stop landing as real bookings.</p>
+                    </div>
+                    <div class="item-price free">Free</div>
+                </div>
+                <label class="item">
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="availability" data-price="450" data-name="Availability that tallies everywhere" checked></span>
+                    <div class="item-main">
+                        <h4>Availability that tallies everywhere <span class="item-tag tag-fix">Fix</span></h4>
+                        <p>One backend source for spots-left and sold-out, so the booking pop-up, homepage, top filter bar and admin all show the same number. Fixes the top-bar off-by-4 and the "tickets sold" number not matching the bookings page. The 1,267 mis-tagged ghost records get cleaned up properly. This is the core engine the items below ride on.</p>
+                    </div>
+                    <div class="item-price">$450</div>
+                </label>
+                <label class="item">
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="halfbookings" data-price="35" data-name="Captured half-bookings tab" checked></span>
+                    <div class="item-main">
+                        <h4>Captured half-bookings tab <span class="item-tag tag-feature">Feature</span></h4>
+                        <p>A separate tab that saves started-but-not-paid bookings with their contact info &mdash; so you know exactly who to chase.</p>
+                        <p class="req-note">Builds on the deposit-gating above (included free).</p>
+                    </div>
+                    <div class="item-price">$35</div>
+                </label>
+                <label class="item">
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="slunblock" data-price="35" data-name="Sri Lanka unblock + auto-reverse" data-requires="availability" checked></span>
+                    <div class="item-main">
+                        <h4>Sri Lanka unblocked + auto-reversing sold-out <span class="item-tag tag-fix">Fix</span></h4>
+                        <p>Sold-out driven by real bookings &mdash; Sri Lanka frees up automatically when someone drops. The small SL-specific slice on top of the engine.</p>
+                        <p class="req-note">Rides on the availability engine above.</p>
+                    </div>
+                    <div class="item-price">$35</div>
+                </label>
+                <div class="item">
+                    <span class="item-check"><span class="static-check">&#10003;</span></span>
+                    <div class="item-main">
+                        <h4>Sri Lanka waitlist <span class="item-tag tag-done">Done</span></h4>
+                        <p>When full, capture the waitlist and offer "book another tournament." Already built &mdash; making sure it's working again. Included, no charge.</p>
+                    </div>
+                    <div class="item-price free">Free</div>
+                </div>
+                <label class="item">
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="booknow" data-price="150" data-name="Book Now updates per year" checked></span>
+                    <div class="item-main">
+                        <h4>"Book Now" updates per year <span class="item-tag tag-fix">Fix</span></h4>
+                        <p>Dates and availability change correctly when you toggle 2026 / 2027 (and beyond).</p>
+                    </div>
+                    <div class="item-price">$150</div>
+                </label>
+            </div>
+            <div class="subtotal"><span class="lbl">Section 2 full</span><span class="val">$670</span></div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- SECTION 3 -->
+    <section class="fade-up">
+        <div class="container">
+            <div class="section-label">Section 3</div>
+            <h2>Payments &amp; Money</h2>
+            <p class="section-subtitle">Money has to be exactly right &mdash; every number reconciled to Stripe.</p>
+            <div class="items">
+                <label class="item">
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="finalpay" data-price="750" data-name="Final payments that reconcile" checked></span>
+                    <div class="item-main">
+                        <h4>Final payments that reconcile <span class="item-tag tag-fix">Fix</span></h4>
+                        <p>Fix the bug where "paid" and "still owing" don't match Stripe <em>or</em> the amounts you type, even after saving (the $500 / $1,000 mismatch). The hairy one: careful, high-stakes money work so nobody's charged wrong.</p>
+                    </div>
+                    <div class="item-price">$750</div>
+                </label>
+                <label class="item">
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="ticketprice" data-price="75" data-name="Ticket price consistency (backend-editable)" checked></span>
+                    <div class="item-main">
+                        <h4>Ticket price consistency <span class="item-tag tag-fix">Fix</span></h4>
+                        <p>Aligning the backend ($3,000) and the site ($2,800) for a 3-person team to one source. Changing the number itself is free &mdash; the $75 is making it so you can update ticket prices in the backend yourself, anytime.</p>
+                        <div class="item-q"><strong>Question:</strong> Which price should 2026 use, and what have teams actually been paying? (Noted: team-of-3 at $2,800 from 2027.)</div>
+                    </div>
+                    <div class="item-price">$75</div>
+                </label>
+                <label class="item">
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="accounting" data-price="175" data-name="Accounting reference codes" checked></span>
+                    <div class="item-main">
+                        <h4>Accounting reference codes on payments <span class="item-tag tag-feature">Feature</span></h4>
+                        <p>Add a reference / accounting code to each payment description and update the Zapier trigger to carry it through &mdash; so bookkeeping lines up automatically.</p>
+                    </div>
+                    <div class="item-price">$175</div>
+                </label>
+                <label class="item">
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="custdiscount" data-price="85" data-name="Customer discount codes" checked></span>
+                    <div class="item-main">
+                        <h4>Customer discount codes <span class="item-tag tag-feature">Feature</span></h4>
+                        <p>When a customer enters a discount code, it applies automatically and carries through to payment &mdash; no manual adjusting on your end.</p>
+                    </div>
+                    <div class="item-price">$85</div>
+                </label>
+                <label class="item">
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="intdiscount" data-price="85" data-name="Internal discount option" checked></span>
+                    <div class="item-main">
+                        <h4>Internal discount option <span class="item-tag tag-feature">Feature</span></h4>
+                        <p>Add a discount from the inside &mdash; give someone a deal directly from the backend, not only through a public code.</p>
+                    </div>
+                    <div class="item-price">$85</div>
+                </label>
+            </div>
+            <div class="subtotal"><span class="lbl">Section 3 full</span><span class="val">$1,170</span></div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- SECTION 4 -->
+    <section class="bg-gray fade-up">
+        <div class="container">
+            <div class="section-label">Section 4</div>
+            <h2>Bookings: Records &amp; Lifecycle</h2>
+            <p class="section-subtitle">Keep every record &mdash; but only show the people actually coming.</p>
+            <div class="items">
+                <div class="item">
+                    <span class="item-check"><span class="static-check">&#10003;</span></span>
+                    <div class="item-main">
+                        <h4>Export everything per event <span class="item-tag tag-done">Done</span></h4>
+                        <p>T-shirt counts, room lists, full team/participant export &mdash; you already found this. No charge.</p>
+                    </div>
+                    <div class="item-price free">$0</div>
+                </div>
+                <label class="item">
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="reassign" data-price="45" data-name="Reassign a booking's year / event" checked></span>
+                    <div class="item-main">
+                        <h4>Reassign a booking's year / event <span class="item-tag tag-feature">Feature</span></h4>
+                        <p>Move a booking to the right year &mdash; like a 2024 entry showing under 2026 &mdash; without the workaround.</p>
+                    </div>
+                    <div class="item-price">$45</div>
+                </label>
+                <label class="item">
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="retag" data-price="100" data-name="Re-tag cancelled / refunded / rolled-over" checked></span>
+                    <div class="item-main">
+                        <h4>Re-tag cancelled / refunded / forfeited / rolled-over <span class="item-tag tag-feature">Feature</span></h4>
+                        <p>Clean statuses that pull people out of the active booking window while keeping their info &mdash; so cancelled folks stop cluttering the list, but nothing's lost.</p>
+                    </div>
+                    <div class="item-price">$100</div>
+                </label>
+                <label class="item">
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="portalaccess" data-price="60" data-name="Portal access for inactive bookings" checked></span>
+                    <div class="item-main">
+                        <h4>Portal access for inactive bookings <span class="item-tag tag-feature">Feature</span></h4>
+                        <p>The portal keeps each year's bookings so people can always look back &mdash; this greys out / locks the years or events a person isn't part of (and cancelled accounts) so it stays clean. (The "auto-fill future years" idea is a bigger feature, left out for now.)</p>
+                        <div class="item-q"><strong>Question:</strong> For finished or cancelled bookings &mdash; grey those years out, or lock access entirely? Happy to do either.</div>
+                    </div>
+                    <div class="item-price">$60</div>
+                </label>
+            </div>
+            <div class="subtotal"><span class="lbl">Section 4 full</span><span class="val">$205</span></div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- SECTION 5 -->
+    <section class="fade-up">
+        <div class="container">
+            <div class="section-label">Section 5</div>
+            <h2>Admin &amp; Portal Builder</h2>
+            <p class="section-subtitle">The day-to-day tools &mdash; plus a couple of "why is this happening?" answers, free.</p>
+            <div class="items">
+                <div class="item">
+                    <span class="item-check"><span class="static-check">&#10003;</span></span>
+                    <div class="item-main">
+                        <h4>Red dot &amp; "TEAM" header &mdash; explained <span class="item-tag tag-explain">Explainer</span></h4>
+                        <p>What the red dot means, and why some entries (like Andrea Hutchinson) show the TEAM header &mdash; explained in plain English, no charge. If either's actually a bug, I'll flag it and we'll price the fix.</p>
+                    </div>
+                    <div class="item-price free">Free</div>
+                </div>
+                <label class="item">
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="cancelplace" data-price="35" data-name="Cancel without losing your place" checked></span>
+                    <div class="item-main">
+                        <h4>Cancel without losing your place <span class="item-tag tag-fix">Fix</span></h4>
+                        <p>Stop bouncing to the Analytics page and wiping your filters every time you cancel a booking.</p>
+                    </div>
+                    <div class="item-price">$35</div>
+                </label>
+                <label class="item">
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="dragdrop" data-price="100" data-name="Portal builder drag-and-drop fixes" checked></span>
+                    <div class="item-main">
+                        <h4>Portal builder drag-and-drop fixes <span class="item-tag tag-fix">Fix</span></h4>
+                        <p>Fix the boxes that won't move, jump around, or get stuck when arranging the portal.</p>
+                    </div>
+                    <div class="item-price">$100</div>
+                </label>
+                <label class="item">
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="teamfields" data-price="40" data-name="Team vs participant fields (verify/surface)" checked></span>
+                    <div class="item-main">
+                        <h4>Team vs participant fields <span class="item-tag tag-feature">Feature</span></h4>
+                        <p>Assign a field as per-team or per-person, with teammates' info shown under their team. This is already built &mdash; so this is making sure it shows up everywhere you need it.</p>
+                        <div class="item-q"><strong>Question:</strong> Where's the team/participant option missing for you &mdash; is it not showing, or not saving? Point me to a couple of spots and I'll sort it.</div>
+                    </div>
+                    <div class="item-price">$40</div>
+                </label>
+                <label class="item">
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="futuredates" data-price="150" data-name="Add future dates & countries yourself" checked></span>
+                    <div class="item-main">
+                        <h4>Add future dates &amp; countries yourself <span class="item-tag tag-feature">Feature</span></h4>
+                        <p>Roll the calendar forward (turn 2026 into 2028) so two years are always live, and add new destinations &mdash; without a developer.</p>
+                    </div>
+                    <div class="item-price">$150</div>
+                </label>
+            </div>
+            <div class="subtotal"><span class="lbl">Section 5 full</span><span class="val">$325</span></div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- SECTION 6 -->
+    <section class="bg-gray fade-up">
+        <div class="container">
+            <div class="section-label">Section 6</div>
+            <h2>Communications &amp; Compliance</h2>
+            <p class="section-subtitle">Automatic comms going out, and the consent boxes ticked.</p>
+            <div class="items">
+                <label class="item">
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="infopacks" data-price="50" data-name="Auto-send + editable info packs" checked></span>
+                    <div class="item-main">
+                        <h4>Auto-send info packs + you edit them <span class="item-tag tag-feature">Feature</span></h4>
+                        <p>The info pack sends the instant someone requests it, and you can edit the packs yourself. Should already be mostly wired &mdash; so this is verifying it fires + making them self-editable.</p>
+                        <div class="item-q action"><strong>Need from you:</strong> Send me your current info packs and I'll wire them in.</div>
+                    </div>
+                    <div class="item-price">$50</div>
+                </label>
+                <label class="item">
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="newsletter" data-price="50" data-name="Marketing consent + newsletter signup" checked></span>
+                    <div class="item-main">
+                        <h4>Marketing consent + newsletter signup <span class="item-tag tag-feature">Feature</span></h4>
+                        <p>Add consent to the privacy policy, terms, and info-pack signup, plus a newsletter signup that collects the list. (This version just collects signups &mdash; it doesn't auto-push them anywhere.)</p>
+                    </div>
+                    <div class="item-price">$50</div>
+                </label>
+                <label class="item">
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="autoconnect" data-price="100" data-name="Auto-connect newsletter to email platform" data-requires="newsletter" checked></span>
+                    <div class="item-main">
+                        <h4>Auto-connect to your email platform <span class="item-tag tag-addon">Add-on</span></h4>
+                        <p>Automatically push newsletter signups into Mailchimp / ActiveCampaign / etc. so you never export a list by hand.</p>
+                        <p class="req-note">Add-on to the newsletter signup above.</p>
+                    </div>
+                    <div class="item-price">$100</div>
+                </label>
+            </div>
+            <div class="subtotal"><span class="lbl">Section 6 full</span><span class="val">$200</span></div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- SECTION 7 -->
+    <section class="fade-up">
+        <div class="container">
+            <div class="section-label">Section 7 · Optional</div>
+            <h2>Growth &amp; Future-Proof</h2>
+            <p class="section-subtitle">The bigger investments &mdash; off by default. Tick any you'd like to add.</p>
+            <div class="items">
+                <label class="item off">
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="portalpay" data-price="750" data-name="Finish payments in the portal + discounts"></span>
+                    <div class="item-main">
+                        <h4>Finish payments in the portal + discounts <span class="item-tag tag-optional">Optional</span></h4>
+                        <p>Let participants complete their balance payments right in the portal, with discount handling. A real Stripe build &mdash; takes a bit.</p>
+                        <div class="item-q"><strong>Question:</strong> Do you want participants finishing their payment through the portal?</div>
+                    </div>
+                    <div class="item-price">$750</div>
+                </label>
+                <label class="item off">
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="brain" data-price="450" data-name="The Brain (source of truth for all AI)"></span>
+                    <div class="item-main">
+                        <h4>The "Brain" &mdash; one source of truth <span class="item-tag tag-optional">Optional</span></h4>
+                        <p>Every piece of tournament info &mdash; events, dates, prices, policies, FAQs, what's included, repair rules &mdash; in one place that <em>any</em> future AI (or your own team) pulls from. Build it once, reuse forever.</p>
+                    </div>
+                    <div class="item-price">$450</div>
+                </label>
+                <label class="item off">
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="chatbot" data-price="450" data-name="AI customer chatbot" data-requires="brain"></span>
+                    <div class="item-main">
+                        <h4>AI customer chatbot <span class="item-tag tag-optional">Optional</span></h4>
+                        <p>A chat that answers customer questions automatically, 24/7 &mdash; sitting right on top of the Brain so every answer is consistent and correct.</p>
+                        <p class="req-note">Needs the Brain (auto-ticks it).</p>
+                    </div>
+                    <div class="item-price">$450</div>
+                </label>
+                <label class="item off">
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="careplan" data-price="250" data-monthly="1" data-name="Care plan (portal maintenance)"></span>
+                    <div class="item-main">
+                        <h4>Care plan <span class="item-tag tag-optional">Monthly · Optional</span></h4>
+                        <p>Ongoing portal maintenance &mdash; keeping everything running and patched. (New features are quoted separately; this covers upkeep, not additions.) Cancel anytime.</p>
+                    </div>
+                    <div class="item-price">$250<small>/month</small></div>
+                </label>
+            </div>
+            <div class="subtotal"><span class="lbl">Optional full</span><span class="val">$1,650 +&nbsp;$250/mo</span></div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- SUMMARY -->
+    <section class="bg-gray fade-up">
+        <div class="container">
+            <div class="section-label">The Numbers</div>
+            <h2>What It Adds Up&nbsp;To</h2>
+            <p class="section-subtitle">"Full" is everything in each section. Your live selection is highlighted below &mdash; and pinned to the bottom of the screen.</p>
+            <div class="summary">
+                <div class="summary-row"><span class="s-name">1 · Content &amp; Copy</span><span class="s-val">$220</span></div>
+                <div class="summary-row"><span class="s-name">2 · Booking &amp; Availability Engine</span><span class="s-val">$670</span></div>
+                <div class="summary-row"><span class="s-name">3 · Payments &amp; Money</span><span class="s-val">$1,170</span></div>
+                <div class="summary-row"><span class="s-name">4 · Records &amp; Lifecycle</span><span class="s-val">$205</span></div>
+                <div class="summary-row"><span class="s-name">5 · Admin &amp; Portal Builder</span><span class="s-val">$325</span></div>
+                <div class="summary-row"><span class="s-name">6 · Communications &amp; Compliance</span><span class="s-val">$200</span></div>
+                <div class="summary-total"><span class="s-name">Essentials (full)</span><span class="s-val">$2,790</span></div>
+                <p class="summary-foot"><strong>Optional growth:</strong> $1,650 + $250/mo &mdash; portal payments, the Brain, the chatbot, care plan.</p>
+                <div class="sel-box">
+                    <div>
+                        <div class="sel-name">Your selection</div>
+                        <div class="sel-sub">Live total of everything you've ticked</div>
+                    </div>
+                    <div class="sel-val" id="sel-total">$0</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <section class="cta-section fade-up">
+        <div class="container">
+            <p class="nothing-dropped">Every single thing you sent is in here &mdash; <strong>nothing got dropped.</strong> Tick what you want, answer the blue questions, and hit <strong>Send to Spiff</strong> &mdash; I'll get your exact picks and we'll lock it in.</p>
+        </div>
+    </section>
+
+    <div class="signoff"><div class="names">Spiffy Designs</div></div>
+    <footer><p>Prepared with care for Ivan &amp; TukTuk Tournament &nbsp;·&nbsp; <a href="mailto:Spiff@spiffydesigns.dev">Spiff@spiffydesigns.dev</a></p></footer>
+
+    <!-- STICKY TALLY BAR -->
+    <div class="tally-bar">
+        <div class="tb-left">
+            <span class="tb-label">Your selection</span>
+            <span class="tb-total" id="bar-total">$0</span>
+        </div>
+        <button class="tb-send" onclick="sendToSpiff()">Send to Spiff &rarr;</button>
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+        const picks = Array.from(document.querySelectorAll('.pick'));
+        const byId = id => document.querySelector('.pick[data-id="' + id + '"]');
+
+        function checkWithReqs(cb) {
+            cb.checked = true;
+            const req = cb.dataset.requires;
+            if (req) { const r = byId(req); if (r && !r.checked) checkWithReqs(r); }
+        }
+        function uncheckDeps(cb) {
+            document.querySelectorAll('.pick[data-requires="' + cb.dataset.id + '"]').forEach(d => {
+                if (d.checked) { d.checked = false; uncheckDeps(d); }
+            });
+        }
+        function fmt(n) { return '$' + n.toLocaleString(); }
+        function recalc() {
+            let one = 0, mo = 0;
+            picks.forEach(cb => {
+                const row = cb.closest('.item');
+                if (cb.checked) {
+                    row.classList.remove('off');
+                    const p = parseInt(cb.dataset.price) || 0;
+                    if (cb.dataset.monthly) mo += p; else one += p;
+                } else { row.classList.add('off'); }
+            });
+            const str = fmt(one) + (mo ? ' + $' + mo + '/mo' : '');
+            document.getElementById('bar-total').textContent = str;
+            document.getElementById('sel-total').textContent = str;
+        }
+        picks.forEach(cb => {
+            cb.addEventListener('change', () => {
+                if (cb.checked) {
+                    const req = cb.dataset.requires;
+                    if (req) { const r = byId(req); if (r && !r.checked) checkWithReqs(r); }
+                } else { uncheckDeps(cb); }
+                recalc();
+            });
+        });
+        function sendToSpiff() {
+            const lines = []; let one = 0, mo = 0;
+            picks.forEach(cb => {
+                if (!cb.checked) return;
+                const p = parseInt(cb.dataset.price) || 0;
+                if (cb.dataset.monthly) { mo += p; lines.push('• ' + cb.dataset.name + ' — $' + p + '/mo'); }
+                else { one += p; lines.push('• ' + cb.dataset.name + ' — $' + p); }
+            });
+            if (!lines.length) { alert('Tick at least one item first!'); return; }
+            const body = "Hi Spiff,\n\nHere's what we'd like to go ahead with from the TukTuk quote:\n\n"
+                + lines.join('\n')
+                + "\n\nOne-time total: " + fmt(one) + (mo ? ' + $' + mo + '/mo' : '')
+                + "\n\nThanks!";
+            window.location.href = 'mailto:Spiff@spiffydesigns.dev?subject='
+                + encodeURIComponent('TukTuk Quote — Our Selection')
+                + '&body=' + encodeURIComponent(body);
+        }
+        recalc();
+    </script>
+</body>
+</html>

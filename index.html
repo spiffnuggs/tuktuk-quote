@@ -306,15 +306,15 @@
                     <div class="item-price free">Free</div>
                 </div>
                 <label class="item">
-                    <span class="item-check"><input type="checkbox" class="pick" data-id="booknow" data-price="150" data-name="Book Now updates per year" checked></span>
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="booknow" data-price="50" data-name="Book Now updates per year" checked></span>
                     <div class="item-main">
                         <h4>"Book Now" updates per year <span class="item-tag tag-fix">Fix</span></h4>
                         <p>Dates and availability change correctly when you toggle 2026 / 2027 (and beyond).</p>
                     </div>
-                    <div class="item-price">$150</div>
+                    <div class="item-price">$50</div>
                 </label>
             </div>
-            <div class="subtotal"><span class="lbl">Section 2 full</span><span class="val">$470</span></div>
+            <div class="subtotal"><span class="lbl">Section 2 full</span><span class="val">$370</span></div>
         </div>
     </section>
 
@@ -328,21 +328,29 @@
             <p class="section-subtitle">Money has to be exactly right &mdash; every number reconciled to Stripe.</p>
             <div class="items">
                 <label class="item">
-                    <span class="item-check"><input type="checkbox" class="pick" data-id="finalpay" data-price="750" data-name="Final payments that reconcile" checked></span>
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="finalpay" data-price="200" data-name="Final payments that reconcile" checked></span>
                     <div class="item-main">
                         <h4>Final payments that reconcile <span class="item-tag tag-fix">Fix</span></h4>
                         <p>Fix the bug where "paid" and "still owing" don't match Stripe <em>or</em> the amounts you type, even after saving (the $500 / $1,000 mismatch). The hairy one: careful, high-stakes money work so nobody's charged wrong.</p>
                     </div>
-                    <div class="item-price">$750</div>
+                    <div class="item-price">$200</div>
                 </label>
                 <label class="item">
-                    <span class="item-check"><input type="checkbox" class="pick" data-id="ticketprice" data-price="75" data-name="Ticket price consistency (backend-editable)" checked></span>
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="ticketprice" data-price="5" data-name="Ticket price consistency" checked></span>
                     <div class="item-main">
                         <h4>Ticket price consistency <span class="item-tag tag-fix">Fix</span></h4>
-                        <p>Aligning the backend ($3,000) and the site ($2,800) for a 3-person team to one source. Changing the number itself is free &mdash; the $75 is making it so you can update ticket prices in the backend yourself, anytime.</p>
+                        <p>Aligning the backend ($3,000) and the site ($2,800) for a 3-person team so what you charge always matches what's shown. Just the number fix &mdash; the ability to change prices yourself in the backend is the optional add-on below.</p>
                         <div class="item-q"><strong>Question:</strong> Which price should 2026 use, and what have teams actually been paying? (Noted: team-of-3 at $2,800 from 2027.)</div>
                     </div>
-                    <div class="item-price">$75</div>
+                    <div class="item-price">$5</div>
+                </label>
+                <label class="item off">
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="ticketedit" data-price="65" data-name="Edit ticket prices yourself (backend)"></span>
+                    <div class="item-main">
+                        <h4>Edit ticket prices yourself <span class="item-tag tag-addon">Optional add-on</span></h4>
+                        <p>Make ticket prices editable from the backend so you can change them anytime yourself &mdash; only if you want that control (otherwise I just set them once, above).</p>
+                    </div>
+                    <div class="item-price">$65</div>
                 </label>
                 <label class="item">
                     <span class="item-check"><input type="checkbox" class="pick" data-id="accounting" data-price="175" data-name="Accounting reference codes" checked></span>
@@ -353,23 +361,23 @@
                     <div class="item-price">$175</div>
                 </label>
                 <label class="item">
-                    <span class="item-check"><input type="checkbox" class="pick" data-id="custdiscount" data-price="85" data-name="Customer discount codes" checked></span>
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="custdiscount" data-price="45" data-name="Customer discount codes" checked></span>
                     <div class="item-main">
                         <h4>Customer discount codes <span class="item-tag tag-feature">Feature</span></h4>
                         <p>When a customer enters a discount code, it applies automatically and carries through to payment &mdash; no manual adjusting on your end.</p>
                     </div>
-                    <div class="item-price">$85</div>
+                    <div class="item-price">$45</div>
                 </label>
                 <label class="item">
-                    <span class="item-check"><input type="checkbox" class="pick" data-id="intdiscount" data-price="85" data-name="Internal discount option" checked></span>
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="intdiscount" data-price="45" data-name="Internal discount option" checked></span>
                     <div class="item-main">
                         <h4>Internal discount option <span class="item-tag tag-feature">Feature</span></h4>
                         <p>Add a discount from the inside &mdash; give someone a deal directly from the backend, not only through a public code.</p>
                     </div>
-                    <div class="item-price">$85</div>
+                    <div class="item-price">$45</div>
                 </label>
             </div>
-            <div class="subtotal"><span class="lbl">Section 3 full</span><span class="val">$1,170</span></div>
+            <div class="subtotal"><span class="lbl">Section 3 full</span><span class="val">$535</span></div>
         </div>
     </section>
 
@@ -391,12 +399,12 @@
                     <div class="item-price free">$0</div>
                 </div>
                 <label class="item">
-                    <span class="item-check"><input type="checkbox" class="pick" data-id="reassign" data-price="45" data-name="Reassign a booking's year / event" checked></span>
+                    <span class="item-check"><input type="checkbox" class="pick" data-id="reassign" data-price="20" data-name="Reassign a booking's year / event yourself" checked></span>
                     <div class="item-main">
                         <h4>Reassign a booking's year / event <span class="item-tag tag-feature">Feature</span></h4>
-                        <p>Move a booking to the right year &mdash; like a 2024 entry showing under 2026 &mdash; without the workaround.</p>
+                        <p>Adds the ability for <em>you</em> to move a booking to the right year/event yourself &mdash; e.g. a 2024 entry showing under 2026 &mdash; likely alongside a page listing all past bookings grouped by section.</p>
                     </div>
-                    <div class="item-price">$45</div>
+                    <div class="item-price">$20</div>
                 </label>
                 <label class="item">
                     <span class="item-check"><input type="checkbox" class="pick" data-id="retag" data-price="100" data-name="Re-tag cancelled / refunded / rolled-over" checked></span>
@@ -416,7 +424,7 @@
                     <div class="item-price">$60</div>
                 </label>
             </div>
-            <div class="subtotal"><span class="lbl">Section 4 full</span><span class="val">$205</span></div>
+            <div class="subtotal"><span class="lbl">Section 4 full</span><span class="val">$180</span></div>
         </div>
     </section>
 
@@ -565,12 +573,12 @@
             <p class="section-subtitle">"Full" is everything in each section. Your live selection is highlighted below &mdash; and pinned to the bottom of the screen.</p>
             <div class="summary">
                 <div class="summary-row"><span class="s-name">1 · Content &amp; Copy</span><span class="s-val">$130</span></div>
-                <div class="summary-row"><span class="s-name">2 · Booking &amp; Availability Engine</span><span class="s-val">$470</span></div>
-                <div class="summary-row"><span class="s-name">3 · Payments &amp; Money</span><span class="s-val">$1,170</span></div>
-                <div class="summary-row"><span class="s-name">4 · Records &amp; Lifecycle</span><span class="s-val">$205</span></div>
+                <div class="summary-row"><span class="s-name">2 · Booking &amp; Availability Engine</span><span class="s-val">$370</span></div>
+                <div class="summary-row"><span class="s-name">3 · Payments &amp; Money</span><span class="s-val">$535</span></div>
+                <div class="summary-row"><span class="s-name">4 · Records &amp; Lifecycle</span><span class="s-val">$180</span></div>
                 <div class="summary-row"><span class="s-name">5 · Admin &amp; Portal Builder</span><span class="s-val">$325</span></div>
                 <div class="summary-row"><span class="s-name">6 · Communications &amp; Compliance</span><span class="s-val">$200</span></div>
-                <div class="summary-total"><span class="s-name">Essentials (full)</span><span class="s-val">$2,500</span></div>
+                <div class="summary-total"><span class="s-name">Essentials (full)</span><span class="s-val">$1,740</span></div>
                 <p class="summary-foot"><strong>Optional growth:</strong> $1,650 &mdash; portal payments, the Brain, the chatbot.</p>
                 <div class="sel-box">
                     <div>
